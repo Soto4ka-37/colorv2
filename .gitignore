@@ -1,0 +1,6 @@
+secret.env
+__pycache__
+db_v5.sqlite
+db_v5.sqlite-shm
+db_v5.sqlite-wal
+config.json

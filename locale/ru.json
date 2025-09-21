@@ -1,0 +1,15 @@
+{
+    "COLOR_NAME": "цвет",
+    "CREATE_NAME": "содать",
+    "RESET_NAME": "сбросить",
+    "MEMBER_NAME": "участник",
+    "RANDOM_NAME": "случайный",
+    "AVATAR_NAME": "аватар",
+    "SETTINGS_NAME": "настройки",
+    "ACCESS_NAME": "доступ",
+    "ADD_NAME": "добавить",
+    "REMOVE_NAME": "убрать",
+    "LIST_NAME": "список",
+    "ROLE_NAME": "роль",
+    "HELP_NAME": "помощь"
+}
