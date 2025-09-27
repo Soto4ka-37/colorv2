@@ -1,7 +1,7 @@
 import disnake
 from datetime import datetime
 from disnake.ext import commands
-from exceptions import ColorFormateException, DownloadAvatarException, CanNotInteractWithBotException
+from exceptions import ColorFormateException, DownloadAvatarException
 from modules.config import cfg
 
 class Errors(commands.Cog):
@@ -32,8 +32,6 @@ class Errors(commands.Cog):
             if isinstance(error, ColorFormateException):
                 message = f'Неверный формат цвета! Воспользуйтесь командой **</color help:1327037046778364026>** для подробной информации.'
             elif isinstance(error, DownloadAvatarException):
-                message = str(error)
-            elif isinstance(error, CanNotInteractWithBotException):
                 message = str(error)
             else:
                 message = f"Произошла ошибка: `{str(error)}`"

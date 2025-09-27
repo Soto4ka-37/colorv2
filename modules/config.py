@@ -38,6 +38,8 @@ class Config:
         self.LOADING_EMOJI: str = self._emojis.get("LOADING", '⌛')
         self.TIMER_EMOJI: str = self._emojis.get("TIMER", "⏲️")
         self.BARRIER_EMOJI: str = self._emojis.get("BARRIER", "🚧")
+        self.LEFT_ARROW_EMOJI: str = self._emojis.get("LEFT_ARROW", "⬅️")
+        self.RIGHT_ARROW_EMOJI: str = self._emojis.get("RIGHT_ARROW", "➡️")
 
 
 cfg = Config('config.json')

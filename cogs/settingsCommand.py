@@ -1,6 +1,6 @@
 import disnake
 from disnake.ext import commands
-from modules.ui import UniversalUiMessage, TextPaginatorView
+from modules.ui import UniversalUiMessage, AutoPaginatorView
 from modules.database import guildChangeRolesTable
 from modules.config import cfg
 async def checkMemberAccess(member: disnake.Member):
@@ -41,12 +41,7 @@ class Settings(commands.Cog):
             description="Владельцы этой роли смогут использовать команду цвет.",
         )):
         ui = UniversalUiMessage()
-        embed = disnake.Embed(
-            description=f'{cfg.LOADING_EMOJI} Обработка запроса...',
-            color=cfg.MAIN_COLOR
-        )
-        
-        await ui.init(inter, embed)
+        await ui.init(inter)
     
         exists = await guildChangeRolesTable.roleInGuild(ui.owner.guild.id, role.id)
         if exists:
@@ -76,12 +71,8 @@ class Settings(commands.Cog):
             description="Владельцы этой роли больше не смогут использовать команду цвет.",
         )):
         ui = UniversalUiMessage()
-        embed = disnake.Embed(
-            description=f'{cfg.LOADING_EMOJI} Обработка запроса...',
-            color=cfg.MAIN_COLOR
-        )
+        await ui.init(inter)
         
-        await ui.init(inter, embed)
         exists = await guildChangeRolesTable.roleInGuild(ui.owner.guild.id, role.id)
         if not exists:
             embed = disnake.Embed(
@@ -106,12 +97,7 @@ class Settings(commands.Cog):
     )
     async def access_list(self, inter: disnake.ApplicationCommandInteraction):
         ui = UniversalUiMessage()
-        embed = disnake.Embed(
-            description=f'{cfg.LOADING_EMOJI} Обработка запроса...',
-            color=cfg.MAIN_COLOR
-        )
-        
-        await ui.init(inter, embed)
+        await ui.init(inter)
         
         roles = await guildChangeRolesTable.getAllByGuild(ui.owner.guild.id)
         if not roles:
@@ -131,7 +117,7 @@ class Settings(commands.Cog):
             else:
                 await guildChangeRolesTable.removeRole(ui.owner.guild.id, role_id)
                 
-        view = TextPaginatorView(ui, ', '.join(guild_roles))
+        view = AutoPaginatorView(ui, 'Роли в белом списке', ', '.join(guild_roles))
         await view.show_page()
 
 def setup(bot):
