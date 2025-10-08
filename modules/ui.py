@@ -85,12 +85,13 @@ class UniversalUiMessage():
             self.message = None
         
 # !!! Частые сообщения !!!
-async def sendNotYour(ui: UniversalUiMessage):
+async def sendNotYour(ui: UniversalUiMessage, inter: disnake.Interaction):
     """Отправляет сообщение что это не ваше взаимодействие"""
-    await ui.sendChild(
+    await inter.send(
+        ephemeral=True,
         embed=disnake.Embed(
-            title='Что-то пошло не так...',
-            description=f"{cfg.BARRIER_EMOJI} Это не ваше взаимодействие.",
+            title='Это не ваше взаимодействие',
+            description=f"{cfg.BARRIER_EMOJI} Это взаимодейсвтие пренадлежит {ui.owner.mention}.",
             color=cfg.ERROR_COLOR
         )
     )
@@ -158,7 +159,7 @@ class AutoPaginatorView(disnake.ui.View):
     @disnake.ui.button(emoji=cfg.LEFT_ARROW_EMOJI, style=disnake.ButtonStyle.gray)
     async def prev(self, button: disnake.ui.Button, inter: disnake.Interaction):
         if inter.author.id != self.ui.owner.id:
-            await sendNotYour(self.ui)
+            await sendNotYour(self.ui, inter)
             return
         if self.page > 0:
             self.page -= 1
@@ -167,7 +168,7 @@ class AutoPaginatorView(disnake.ui.View):
     @disnake.ui.button(emoji=cfg.RIGHT_ARROW_EMOJI, style=disnake.ButtonStyle.gray)
     async def next(self, button: disnake.ui.Button, inter: disnake.Interaction):
         if inter.author.id != self.ui.owner.id:
-            await sendNotYour(self.ui)
+            await sendNotYour(self.ui, inter)
             return
         if self.page < len(self.pages) - 1:
             self.page += 1
@@ -204,7 +205,7 @@ class ConfirmView(disnake.ui.View):
     @disnake.ui.button(label="Да", style=disnake.ButtonStyle.green)
     async def confirm(self, button: disnake.ui.Button, inter: disnake.Interaction):
         if inter.author.id != self.ui.owner.id:
-            await sendNotYour(self.ui)
+            await sendNotYour(self.ui, inter)
 
         self.value = True
         self._event.set()
@@ -214,7 +215,7 @@ class ConfirmView(disnake.ui.View):
     @disnake.ui.button(label="Нет", style=disnake.ButtonStyle.red)
     async def cancel(self, button: disnake.ui.Button, inter: disnake.Interaction):
         if inter.author.id != self.ui.owner.id:
-            await sendNotYour(self.ui)
+            await sendNotYour(self.ui, inter)
 
         self.value = False
         self._event.set()
@@ -244,7 +245,7 @@ class ColorChoiseView(disnake.ui.View):
     @disnake.ui.button(label="1", style=disnake.ButtonStyle.blurple)
     async def color1(self, button: disnake.ui.Button, inter: disnake.Interaction):
         if inter.author.id != self.ui.owner.id:
-            await sendNotYour(self.ui)
+            await sendNotYour(self.ui, inter)
 
         self.value = self.colors[0]
         self._event.set()
@@ -254,7 +255,7 @@ class ColorChoiseView(disnake.ui.View):
     @disnake.ui.button(label="2", style=disnake.ButtonStyle.blurple)
     async def color2(self, button: disnake.ui.Button, inter: disnake.Interaction):
         if inter.author.id != self.ui.owner.id:
-            await sendNotYour(self.ui)
+            await sendNotYour(self.ui, inter)
 
         self.value = self.colors[1]
         self._event.set()
@@ -264,7 +265,7 @@ class ColorChoiseView(disnake.ui.View):
     @disnake.ui.button(label="3", style=disnake.ButtonStyle.blurple)
     async def color3(self, button: disnake.ui.Button, inter: disnake.Interaction):
         if inter.author.id != self.ui.owner.id:
-            await sendNotYour(self.ui)
+            await sendNotYour(self.ui, inter)
 
         self.value = self.colors[2]
         self._event.set()
@@ -274,7 +275,7 @@ class ColorChoiseView(disnake.ui.View):
     @disnake.ui.button(label="4", style=disnake.ButtonStyle.blurple)
     async def color4(self, button: disnake.ui.Button, inter: disnake.Interaction):
         if inter.author.id != self.ui.owner.id:
-            await sendNotYour(self.ui)
+            await sendNotYour(self.ui, inter)
 
         self.value = self.colors[3]
         self._event.set()
@@ -284,7 +285,7 @@ class ColorChoiseView(disnake.ui.View):
     @disnake.ui.button(label="5", style=disnake.ButtonStyle.blurple)
     async def color5(self, button: disnake.ui.Button, inter: disnake.Interaction):
         if inter.author.id != self.ui.owner.id:
-            await sendNotYour(self.ui)
+            await sendNotYour(self.ui, inter)
 
         self.value = self.colors[4]
         self._event.set()
@@ -294,7 +295,7 @@ class ColorChoiseView(disnake.ui.View):
     @disnake.ui.button(label="Отмена", style=disnake.ButtonStyle.red)
     async def cancel(self, button: disnake.ui.Button, inter: disnake.Interaction):
         if inter.author.id != self.ui.owner.id:
-            await sendNotYour(self.ui)
+            await sendNotYour(self.ui, inter)
 
         self.value = False
         self._event.set()
