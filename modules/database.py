@@ -1,4 +1,5 @@
 import aiosqlite
+import datetime
 from modules.colorFunctions import Color
 from modules.config import cfg
 
@@ -42,6 +43,7 @@ class Database:
                 user_id INTEGER NOT NULL,
                 role_id INTEGER NOT NULL,
                 color TEXT NOT NULL,
+                timestamp TEXT,
                 PRIMARY KEY (guild_id, user_id, role_id)
             );
         """)
@@ -103,11 +105,11 @@ class ColorTableManager:
     # ------------------------
     async def addRole(self, guild_id: int, user_id: int, role_id: int, color: Color):
         await self.db.execute_write("""
-            INSERT INTO colors (guild_id, user_id, role_id, color)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO colors (guild_id, user_id, role_id, color, timestamp)
+            VALUES (?, ?, ?, ?, ?)
             ON CONFLICT(guild_id, user_id, role_id)
             DO UPDATE SET color=excluded.color;
-        """, (guild_id, user_id, role_id, color.hex))
+        """, (guild_id, user_id, role_id, color.hex, datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M:%S")))
 
     async def removeUser(self, guild_id: int, user_id: int):
         await self.db.execute_write(
@@ -143,6 +145,22 @@ class ColorTableManager:
         )
         return tuple(DataColor(*row) for row in rows)
 
+    async def getLastByUser(self, guild_id: int, user_id: int) -> DataColor | None:
+        row = await self.db.fetchone_read(
+            """
+            SELECT role_id, color 
+            FROM colors 
+            WHERE guild_id = ? AND user_id = ? 
+            ORDER BY timestamp DESC 
+            LIMIT 1;
+            """,
+            (guild_id, user_id)
+        )
+        if row is None:
+            return None
+        return DataColor(*row)
+
+    
     async def getByUser(self, guild_id: int, user_id: int, role_id: int) -> DataColor | None:
         row = await self.db.fetchone_read(
             "SELECT color FROM colors WHERE guild_id = ? AND user_id = ? AND role_id = ?;",

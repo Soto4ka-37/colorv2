@@ -11,5 +11,8 @@
     "REMOVE_NAME": "убрать",
     "LIST_NAME": "список",
     "ROLE_NAME": "роль",
-    "HELP_NAME": "помощь"
+    "HELP_NAME": "помощь",
+    "REPAIR_NAME": "починить",
+    "COLOR_COPY_NAME": "Скопировать цвет"
+
 }

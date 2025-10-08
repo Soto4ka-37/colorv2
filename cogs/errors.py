@@ -12,11 +12,13 @@ class Errors(commands.Cog):
         '''Универсальная обертка для обработки ошибок'''
         unknown_error = False
         emoji = cfg.CROSS_EMOJI
+        title = 'Что-то пошло не так :('
         if isinstance(error, commands.CommandNotFound):
             return
         elif isinstance(error, commands.MissingRequiredArgument):
             message = f"Отсутствует обязательный аргумент: `{error.param.name}`."
         elif isinstance(error, commands.MemberNotFound):
+            title = 'Кто это?'
             message = "Указанный пользователь не найден."
         elif isinstance(error, commands.BotMissingPermissions):
             missing = ', '.join(error.missing_permissions)
@@ -30,7 +32,8 @@ class Errors(commands.Cog):
         elif isinstance(error, commands.CommandInvokeError):
             error = error.original
             if isinstance(error, ColorFormateException):
-                message = f'Неверный формат цвета! Воспользуйтесь командой **</color help:1327037046778364026>** для подробной информации.'
+                title = 'Неверный формат цвета'
+                message = 'Воспользуйтесь командой **</color help:1327037046778364026>** для подробной информации.'
             elif isinstance(error, DownloadAvatarException):
                 message = str(error)
             else:
@@ -38,15 +41,17 @@ class Errors(commands.Cog):
                 unknown_error = True
                 
         elif isinstance(error, commands.NotOwner):
+            title = 'Ай-ай-ай'
             message = "Только владелец бота может использовать эту команду."
         elif isinstance(error, commands.NoPrivateMessage):
+            title = 'Ай-ай-ай'
             message = "Эту команду нельзя использовать в личных сообщениях."
         else:
             message = f"Непредвиденная ошибка: `{str(error)}`"
             unknown_error = True
             
         embed = disnake.Embed(
-            title='Что-то пошло не так...',
+            title=title,
             description=f"{emoji} {message}", 
             color=cfg.ERROR_COLOR,
             timestamp=datetime.now()

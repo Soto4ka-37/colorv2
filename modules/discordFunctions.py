@@ -53,7 +53,7 @@ async def removeUserRoles(guild: disnake.Guild, user_id: int) -> list[int]:
                 not_removed.append(role.id)
     await colorTable.removeUser(guild.id, user_id)
     return not_removed
-
+    
 async def moveRole(member: disnake.Member, role: disnake.Role) -> list[str]:
     '''Перемещает роль на уровень пользователя или максимально возможный, возвращает список предупреждений'''
     bot_member = member.guild.me

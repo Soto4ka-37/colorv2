@@ -21,11 +21,13 @@ class UniversalUiMessage():
         '''
         self.message = None
         self.owner = None
+        self.guild = None
         self.ctx = None
         
     async def init(self, ctx: disnake.Interaction | commands.Context, embed: disnake.Embed = None, view: disnake.ui.View = None) -> Self:
         """Функция инициализации интерфейса. Отправка сообщения опциональна. """
         self.ctx = ctx
+        self.guild = ctx.guild
         self.owner = ctx.author
         if embed: # С сообщением
             await self._send(embed, view)
@@ -35,9 +37,9 @@ class UniversalUiMessage():
         """Функция отправки первого сообщения"""
         if isinstance(self.ctx, disnake.Interaction):
             if view:
-                await self.ctx.response.send_message(embed=embed, view=view)
+                await self.ctx.send(embed=embed, view=view)
             else:
-                await self.ctx.response.send_message(embed=embed)
+                await self.ctx.send(embed=embed)
             self.message = await self.ctx.original_message()
         elif isinstance(self.ctx, commands.Context):
             try:

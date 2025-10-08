@@ -46,7 +46,7 @@ class Settings(commands.Cog):
         exists = await guildChangeRolesTable.roleInGuild(ui.owner.guild.id, role.id)
         if exists:
             embed = disnake.Embed(
-                title='Что-то пошло не так..',
+                title='Уже готово',
                 description=f'{cfg.CROSS_EMOJI} Роль {role.mention} уже добавлена в список разрешённых.',
                 color=cfg.ERROR_COLOR
             )
@@ -76,7 +76,7 @@ class Settings(commands.Cog):
         exists = await guildChangeRolesTable.roleInGuild(ui.owner.guild.id, role.id)
         if not exists:
             embed = disnake.Embed(
-                title='Что-то пошло не так...',
+                title='Роль не найдена',
                 description=f'{cfg.CROSS_EMOJI} Роль {role.mention} не найдена в списке разрешённых.',
                 color=cfg.ERROR_COLOR
             )
