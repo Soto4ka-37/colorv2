@@ -5,3 +5,4 @@ db_v5.sqlite-shm
 db_v5.sqlite-wal
 core_connect.json
 cogs/coreConnect.py
+config.json
