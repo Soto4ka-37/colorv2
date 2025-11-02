@@ -7,6 +7,7 @@ from disnake.ext import commands
 from typing import Literal, Self
 
 from modules.config import cfg
+from modules.emojis import emoji
 from modules.colorFunctions import Color
 
 # !!! Класс для работы с сообщениями !!!
@@ -92,8 +93,7 @@ async def sendNotYour(ui: UniversalUiMessage, inter: disnake.Interaction):
     await inter.send(
         ephemeral=True,
         embed=disnake.Embed(
-            title='Это не ваше взаимодействие',
-            description=f"{cfg.BARRIER_EMOJI} Это взаимодейсвтие пренадлежит {ui.owner.mention}.",
+            description=f"{emoji.FORBIDDEN} Это взаимодейсвтие пренадлежит {ui.owner.mention}.",
             color=cfg.ERROR_COLOR
         )
     )
@@ -158,7 +158,7 @@ class AutoPaginatorView(disnake.ui.View):
         else:
             await self.ui.edit(embed=embed, view=self)
 
-    @disnake.ui.button(emoji=cfg.LEFT_ARROW_EMOJI, style=disnake.ButtonStyle.gray)
+    @disnake.ui.button(emoji=emoji.LEFT_ARROW, style=disnake.ButtonStyle.gray)
     async def prev(self, button: disnake.ui.Button, inter: disnake.Interaction):
         if inter.author.id != self.ui.owner.id:
             await sendNotYour(self.ui, inter)
@@ -167,7 +167,7 @@ class AutoPaginatorView(disnake.ui.View):
             self.page -= 1
             await self.show_page(inter)
 
-    @disnake.ui.button(emoji=cfg.RIGHT_ARROW_EMOJI, style=disnake.ButtonStyle.gray)
+    @disnake.ui.button(emoji=emoji.RIGHT_ARROW, style=disnake.ButtonStyle.gray)
     async def next(self, button: disnake.ui.Button, inter: disnake.Interaction):
         if inter.author.id != self.ui.owner.id:
             await sendNotYour(self.ui, inter)

@@ -8,34 +8,54 @@ from modules.imageFunctions import generateColorImage, getDominantColors, genera
 from cogs.settingsCommand import checkMemberAccess
 from modules.ui import cd
 from modules.config import cfg
+from modules.emojis import emoji
 from modules.database import colorTable
 from typing import Literal
 
 async def sendHelp(ui: UniversalUiMessage) -> None:
     '''Справка по использованию команды color'''
     embed = disnake.Embed(
-        title=f"{cfg.HELP_EMOJI} Справка по использованию бота",
-        description=(
-            "Команда позволяет создавать персональные цветовые роли.\n"
-            f"Все команды кроме справки поддерживают использование на другом участнике.\n\n"
+        description=(            
+            f"# {emoji.HELP} Справка по использованию бота\n"
+            'Поля помченные `[*]` являются обязательными. Использовать цель могут только участники с правом `manage_roles`.\n'
             
-            f"**Список команд:**\n"
-            f"- </color create:1327037046778364026> `(!цвет)` `[*HEX]` — создать цвет по коду\n"
-            f"- </color random:1327037046778364026> `(!цвет рандом)` — случайный цвет\n"
-            f"- </color avatar:1327037046778364026> `(!цвет аватар)` — цвет на основе аватарки\n"
-            f"- </color repair:1327037046778364026> `(!цвет починить)` — восстанавливает цвет из базы данных если он был поврежден\n"
-            f"- </color reset:1327037046778364026> `(!цвет -)` — сбросить цвет\n"
-            f"- </color help:1327037046778364026> `(!цвет ?)` — открыть эту справку\n\n"
+            '### Смена цвета\n'
+            'Устанавливает указанный цвет, в формате `HEX`\n'
+            'Команды: </color create:1327037046778364026> или `!цвет` или `!color` (`!colour`)\n'
+            'Поля: `[*HEX]`, `[@цель]`\n'
             
-            f"**Список взаимодействий:**\n"
-            "Пользователь -> Приложения\n"
-            "- Скопировать цвет роли\n"
-            "- Скопировать цвет аватара\n\n"
+            '### Случайный цвет\n'
+            'Генерирует и устанавливает случайный цвет\n'
+            'Команды: </color random:1327037046778364026> или `!цвет рандом` или `!color random`\n'
+            'Поля: `[@цель]`\n'
 
-            f"**О формате HEX:**\n"
-            "Вид `#RRGGBB` (Например `#FFA500` или `ff0000`)\nВы можете [выбрать цвет](https://csscolor.ru/) или воспользоваться [таблицей](https://colorswall.com/ru/colors/xkcd).\n\n"
-            f"**Ограничения:**\n"
-            f"- {cfg.TIMER_EMOJI} Один участник может менять свой цвет раз в 10 секунд\n"
+            '### Анализ аватара\n'
+            'Предлагает цвета на основе аватарки\n'
+            'Команды: </color avatar:1327037046778364026> или `!цвет аватар`\n'
+            'Поля: `[@источник]`\n'
+
+            '### Восстановление цвета\n'
+            'Восстанавливает цвет из базы данных\n'
+            'Команды: </color repair:1327037046778364026> или `!цвет починить`\n'
+            'Поля: `[@цель]`\n'
+
+            '### Сброс цвета\n'
+            'Удаляет текущий цвет\n'
+            'Команды: </color reset:1327037046778364026> или `!цвет -` или `!цвет сброс` или `!color reset`\n'
+            'Поля: `[@цель]`\n'
+
+            '### Взаимодействия\n'
+            'ПКМ по пользователю -> Приложения:\n'
+            '- Скопировать цвет роли\n'
+            '- Скопировать цвет аватара\n'
+
+            '### О формате HEX\n'
+            'Формат: `#RRGGBB` (Например: `#FFA500` или `ff0000`)\n'
+            '[Выбрать цвет с помощью палитры](https://csscolor.ru/)\n'
+            '[Таблица цветов](https://colorswall.com/ru/colors/xkcd)\n'
+
+            '### Ограничения\n'
+            f'- {emoji.CLOCK} Один участник может менять свой цвет раз в 10 секунд'
         ),
         color=cfg.MAIN_COLOR
     )
@@ -44,8 +64,7 @@ async def sendHelp(ui: UniversalUiMessage) -> None:
 async def sendTimeout(ui: UniversalUiMessage) -> None:
     '''Сообщение о таймауте'''
     embed = disnake.Embed(
-        title='Время вышло!',
-        description=f'{cfg.TIMER_EMOJI} Время ожидания истекло. Пожалуйста, попробуйте снова.',
+        description=f'{emoji.CLOCK} Время ожидания истекло. Пожалуйста, попробуйте снова.',
         color=cfg.ERROR_COLOR
     )
     await ui.edit(embed)
@@ -53,8 +72,7 @@ async def sendTimeout(ui: UniversalUiMessage) -> None:
 async def sendNotColor(ui: UniversalUiMessage) -> None:
     '''Сообщение об отсутствии цвета у участника'''
     embed = disnake.Embed(
-        title='У вас нет цвета',
-        description=f'{cfg.CROSS_EMOJI} У вас нет цвета. Создать вы его можете командой </color create:1327037046778364026>',
+        description=f'{emoji.CROSS} У вас нет цвета. Создать вы его можете командой </color create:1327037046778364026>',
         color=cfg.ERROR_COLOR
     )
     await ui.edit(embed)
@@ -62,8 +80,7 @@ async def sendNotColor(ui: UniversalUiMessage) -> None:
 async def sendNotManageRoles(ui: UniversalUiMessage) -> None:
     '''Сообщение об отсутствии цвета у участника'''
     embed = disnake.Embed(
-        title='Отказано в доступе',
-        description=f'{cfg.CROSS_EMOJI} Что бы редактировать цвет других участников необходимо право `manage_roles`!',
+        description=f'{emoji.CROSS} Что бы редактировать цвет других участников необходимо право `manage_roles`!',
         color=cfg.ERROR_COLOR
     )
     await ui.edit(embed)
@@ -71,8 +88,7 @@ async def sendNotManageRoles(ui: UniversalUiMessage) -> None:
 async def sendTooMany(ui: UniversalUiMessage) -> None:
     '''Сообщение об отсутствии цвета у участника'''
     embed = disnake.Embed(
-        title='У вас нет цвета',
-        description=f'{cfg.CROSS_EMOJI} У вас нет цвета. Создать вы его можете командой </color create:1327037046778364026>',
+        description=f'{emoji.CROSS} У вас нет цвета. Создать вы его можете командой </color create:1327037046778364026>',
         color=cfg.ERROR_COLOR
     )
     await ui.edit(embed)
@@ -80,8 +96,7 @@ async def sendTooMany(ui: UniversalUiMessage) -> None:
 async def sendCancel(ui: UniversalUiMessage) -> None:
     '''Сообщение об отмене'''
     embed = disnake.Embed(
-        title='Отмена',
-        description=f'{cfg.CROSS_EMOJI} Отменено пользователем.',
+        description=f'{emoji.CROSS} Действие отменено пользователем.',
         color=cfg.ERROR_COLOR
     )
     await ui.edit(embed)
@@ -89,8 +104,7 @@ async def sendCancel(ui: UniversalUiMessage) -> None:
 async def sendIsBot(ui: UniversalUiMessage) -> None:
     '''Сообщение о том, что участник - бот'''
     embed = disnake.Embed(
-        title='Участник - бот',
-        description=f'{cfg.CROSS_EMOJI} Нельзя менять цвет ботам.',
+        description=f'{emoji.CROSS} Нельзя менять цвет ботам.',
         color=cfg.ERROR_COLOR
     )
     await ui.edit(embed)
@@ -98,8 +112,7 @@ async def sendIsBot(ui: UniversalUiMessage) -> None:
 async def sendNotInWhitelist(ui: UniversalUiMessage) -> None:
     '''Сообщение о том, что участник не в белом списке'''
     embed = disnake.Embed(
-        title="Отказано в доступе",
-        description=f'{cfg.BARRIER_EMOJI} Только пользователи с определёнными ролями могут менять свой цвет!',
+        description=f'{emoji.FORBIDDEN} Только пользователи с определёнными ролями могут менять свой цвет!',
         color=cfg.MAIN_COLOR
     )
     await ui.edit(embed)
@@ -109,11 +122,10 @@ async def acceptColor(ui: UniversalUiMessage, member: disnake.Member, color: Col
     # Спрашиваем подтверждение выбранного цвета
     color_name, percent = await color.getName()
     embed = disnake.Embed(
-        title=f'{color_name.upper()} ({percent})',
         description=(
-            f'{cfg.QUESTION_EMOJI} Вы действительно хотите установить этот цвет?'
+            f'{emoji.INFO} Это дейсвтие сменит ваш цвет на **{color_name.upper()} ({percent})**! Продолжить?'
             if ui.owner.id == member.id
-            else f'{cfg.QUESTION_EMOJI} Вы действительно хотите установить этот цвет для участника `{member}`?'
+            else f'{emoji.INFO} Это дейсвтие сменит цвет участника `{member}` ({member.mention}) на **{color_name.upper()} ({percent})**! Продолжить?'
         ),
         color=color.disnakeColor)
     
@@ -124,7 +136,6 @@ async def acceptColor(ui: UniversalUiMessage, member: disnake.Member, color: Col
 
     # Ждём ответа
     result = await view.wait()
-    # await ui.clearImages()
     
     return result
 
@@ -132,11 +143,10 @@ async def acceptReset(ui: UniversalUiMessage, member: disnake.Member) -> bool:
     '''Функция для подтверждения сброса цвета. Возвращает True если пользователь подтвердил выбор, False если отменил и None при таймауте'''
     # Спрашиваем подтверждение сброса цвета
     embed = disnake.Embed(
-        title="Сброс",
         description=(
-            f'{cfg.QUESTION_EMOJI} Вы действительно хотите удалить свой цвет?'
+            f'{emoji.INFO} Это действие полностью удалит ваш цвет! Продолжить?'
             if ui.owner.id == member.id
-            else f'{cfg.QUESTION_EMOJI} Вы действительно хотите удалить цвет участника `{member}`?'
+            else f'{emoji.INFO} Это действие полностью удалит цвет участника `{member}` ({member.mention})! Продолжить?'
         ),
         color=cfg.ERROR_COLOR
     )
@@ -152,14 +162,12 @@ async def choiseAndAcceptColor(ui: UniversalUiMessage, member: disnake.Member, c
     '''Функция для выбора и подтверждения цвета из списка. Возвращает выбранный цвет, False если отменил и None при таймауте'''
     for _ in range(5): # Максимум 5 попыток выбора цвета
         embed = disnake.Embed(
-            title="Анализ аватарки",
-            description=f"{cfg.QUESTION_EMOJI} Выберите цвет из списка ниже:",
+            description=f"{emoji.CHECKMARK} ",
             color=cfg.MAIN_COLOR
         )
         image = await generateFiveColorsImage(colors)
 
         embed.set_image(file=disnake.File(image, filename='colors.webp'))
-        embed.set_thumbnail((member.avatar or member.default_avatar).url)
 
         view = ColorChoiseView(ui, colors)
         await ui.edit(embed, view)
@@ -189,8 +197,7 @@ async def resetColor(ui: UniversalUiMessage, member: disnake.Member) -> None:
     if failed:
         roles = ', '.join(f'<@&{role_id}>' for role_id in failed)
         embed = disnake.Embed(
-            title='Предупреждение',
-            description=f'{cfg.WARNING_EMOJI} Не удалось удалить следующие роли: {roles}. Пожалуйста, удалите их вручную или свяжитесь с администратором сервера.',
+            description=f'{emoji.ERROR} Не удалось удалить следующие роли: {roles}. Пожалуйста, удалите их вручную или свяжитесь с администратором сервера.',
             color=cfg.ERROR_COLOR
         )
         await ui.sendChild(embed)
@@ -209,7 +216,7 @@ async def changeColor(ui: UniversalUiMessage, member: disnake.Member, color: Col
     # Выводим предупреждения, если есть
     for warning in warnings:
         embed = disnake.Embed(
-            description=f'{cfg.WARNING_EMOJI} {warning}',
+            description=f'{emoji.ERROR} {warning}',
             color=cfg.ERROR_COLOR
         )
         await ui.sendChild(embed)
@@ -219,11 +226,10 @@ async def changeColor(ui: UniversalUiMessage, member: disnake.Member, color: Col
     # Отправляем сообщение об успехе
     color_name, percent = await color.getName()
     embed = disnake.Embed(
-        title=f'{color_name.upper()} ({percent})',
         description=(
-            f'{cfg.CHECKMARK_EMOJI} Цвет успешно создан и выдан вам.'
+            f'{emoji.CHECKMARK} Цвет **{color_name.upper()} ({percent})** успешно создан и выдан вам.'
             if ui.owner.id == member.id
-            else f'{cfg.CHECKMARK_EMOJI} Цвет успешно создан и выдан участнику `{member}`.'
+            else f'{emoji.CHECKMARK} Цвет успешно создан и выдан участнику `{member}`.'
         ),
         color=color.disnakeColor
     )
@@ -239,11 +245,10 @@ async def processResetCommand(ui: UniversalUiMessage, member: disnake.Member):
         return await sendCancel(ui)
     await resetColor(ui, member)
     embed = disnake.Embed(
-        title='Успех',
         description=(
-            f'{cfg.CHECKMARK_EMOJI} Ваш цвет успешно сброшен.'
+            f'{emoji.CHECKMARK} Ваш цвет успешно сброшен.'
             if ui.owner.id == member.id
-            else f"{cfg.CHECKMARK_EMOJI} Цвет учатника `{member}` успешно сброшен."
+            else f"{emoji.CHECKMARK} Цвет учатника `{member}` успешно сброшен."
         ),
         color=cfg.MAIN_COLOR)
     await ui.edit(embed)
@@ -258,25 +263,18 @@ async def processRepairCommand(ui: UniversalUiMessage, member: disnake.Member) -
 async def processAvatarCommand(ui: UniversalUiMessage, member: disnake.Member) -> Color | None:
     '''Процесс выполнения подкоманды анализа аватара. Возвращает выбранный цвет или None при ошибке'''
     
-    # embed = disnake.Embed(
-    #     description=f'{cfg.LOADING_EMOJI} Анализирую аватарку...',
-    #     color=cfg.MAIN_COLOR
-    # )
-    # await ui.edit(embed)
-    
     # Получаем 5 доминантных цветов
     colors = await getDominantColors(member, 5)
     if not colors:
         embed = disnake.Embed(
-            title='Что-то пошло не так :(',
-            description=f'{cfg.CROSS_EMOJI} Не удалось проанализировать аватарку участника.',
+            description=f'{emoji.ERROR} Не удалось проанализировать аватарку участника.',
             color=cfg.ERROR_COLOR
         )
         await ui.edit(embed)
         return None
     
     # Выбираем и подтверждаем цвет
-    color = await choiseAndAcceptColor(ui, member, colors)
+    color = await choiseAndAcceptColor(ui, ui.owner, colors)
     if color is None:
         await sendTimeout(ui)
         return None
@@ -361,6 +359,7 @@ class ColorCommand(commands.Cog):
             # Анализ аватарки
             elif hex_color in ['аватар', 'avatar', 'аватарка']:
                 color = await processAvatarCommand(ui, member)
+                member = ctx.author
                 
             elif hex_color in ['починить', 'repair', 'восстановить']:
                 color = await processRepairCommand(ui, member)
@@ -375,11 +374,7 @@ class ColorCommand(commands.Cog):
             cdwn = cd.check(ui.owner.id, cd.t.COLOR, 10)
             if cdwn:
                 embed = disnake.Embed(
-                    title='Не торопись ты так 😮‍💨',
-                    description=(
-                        f'{cfg.TIMER_EMOJI} Один цвет раз в 10 секунд.\n'
-                        f'Подождите ещё `{cdwn}` секунд.'
-                    ),
+                    description=f'{emoji.CLOCK} Вы меняете цвет слишком быстро! Подождите ещё `{cdwn}` секунд.',
                     color=cfg.ERROR_COLOR
                 )
                 await ui.edit(embed)
@@ -387,7 +382,7 @@ class ColorCommand(commands.Cog):
             
             # # Сообщение загрузки
             embed = disnake.Embed(
-                description=f'{cfg.LOADING_EMOJI} Применяю цвет...',
+                description=f'{emoji.LOADING} Применяю цвет...',
                 color=cfg.MAIN_COLOR
             )
             await ui.edit(embed)  
@@ -396,8 +391,7 @@ class ColorCommand(commands.Cog):
                 await asyncio.wait_for(changeColor(ui, member, color), timeout=7)
             except asyncio.TimeoutError:
                 embed = disnake.Embed(
-                    title='Что-то пошло не так :(',
-                    description=f'{cfg.TIMER_EMOJI} Процесс создания цвета занял слишком много времени и был аварийно завершен.',
+                    description=f'{emoji.ERROR} Процесс создания цвета занял слишком много времени и был аварийно завершен.',
                     color=cfg.ERROR_COLOR
                 )
                 return await ui.edit(embed)
@@ -499,7 +493,7 @@ class ColorCommand(commands.Cog):
         name=disnake.Localized('repair', key='REPAIR_NAME'),
         description='Восстанавливает ваш цвет из базы данных, если он был поврежден'
     )
-    async def color_inter_avatar(
+    async def color_inter_repair(
         self,
         inter: disnake.ApplicationCommandInteraction,
         member: disnake.Member = commands.Param(
@@ -527,11 +521,23 @@ class ColorCommand(commands.Cog):
         
     @commands.user_command(name='Скопировать цвет аватарки')
     async def copy_avatar(self, inter: disnake.ApplicationCommandInteraction, user: disnake.User):
+        if not inter.guild:
+            embed = disnake.Embed(
+                description=f'Как ты вообще умудрился вызвать эту интеракцию в личных сообщениях?',
+                color=cfg.ERROR_COLOR
+            )
+            await inter.send(embed=embed, ephemeral=True)
         await inter.response.defer()
         await self.processColorUniversal(inter, 'аватар', user)
         
     @commands.user_command(name='Скопировать цвет роли')
     async def copy_role(self, inter: disnake.ApplicationCommandInteraction, user: disnake.Member):
+        if not inter.guild:
+            embed = disnake.Embed(
+                description=f'Как ты вообще умудрился вызвать эту интеракцию в личных сообщениях?',
+                color=cfg.ERROR_COLOR
+            )
+            await inter.send(embed=embed, ephemeral=True)
         await inter.response.defer()
         await self.processColorUniversal(inter, f"{user.color.value:06x}", user)
 

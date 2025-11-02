@@ -3,6 +3,7 @@ from disnake.ext import commands
 from modules.ui import UniversalUiMessage, AutoPaginatorView
 from modules.database import guildChangeRolesTable
 from modules.config import cfg
+from modules.emojis import emoji
 async def checkMemberAccess(member: disnake.Member):
     role_ids = await guildChangeRolesTable.getAllByGuild(member.guild.id)
     if not role_ids:
@@ -46,8 +47,7 @@ class Settings(commands.Cog):
         exists = await guildChangeRolesTable.roleInGuild(ui.owner.guild.id, role.id)
         if exists:
             embed = disnake.Embed(
-                title='Уже готово',
-                description=f'{cfg.CROSS_EMOJI} Роль {role.mention} уже добавлена в список разрешённых.',
+                description=f'{emoji.CROSS} Роль {role.mention} уже добавлена в список разрешённых.',
                 color=cfg.ERROR_COLOR
             )
             
@@ -55,8 +55,7 @@ class Settings(commands.Cog):
         
         await guildChangeRolesTable.addRole(ui.owner.guild.id, role.id)
         embed = disnake.Embed(
-            title='Успех',
-            description=f'{cfg.CHECKMARK_EMOJI} Роль {role.mention} успешно добавлена в список разрешённых.',
+            description=f'{emoji.CHECKMARK} Роль {role.mention} успешно добавлена в список разрешённых.',
             color=cfg.MAIN_COLOR
         )
         
@@ -76,8 +75,7 @@ class Settings(commands.Cog):
         exists = await guildChangeRolesTable.roleInGuild(ui.owner.guild.id, role.id)
         if not exists:
             embed = disnake.Embed(
-                title='Роль не найдена',
-                description=f'{cfg.CROSS_EMOJI} Роль {role.mention} не найдена в списке разрешённых.',
+                description=f'{emoji.CROSS} Роль {role.mention} не найдена в списке разрешённых.',
                 color=cfg.ERROR_COLOR
             )
             
@@ -85,7 +83,7 @@ class Settings(commands.Cog):
 
         await guildChangeRolesTable.removeRole(ui.owner.guild.id, role.id)
         embed = disnake.Embed(
-            description=f'{cfg.CHECKMARK_EMOJI} Роль {role.mention} успешно удалена из списка разрешённых.',
+            description=f'{emoji.CHECKMARK} Роль {role.mention} успешно удалена из списка разрешённых.',
             color=cfg.MAIN_COLOR
         )
         
@@ -102,11 +100,9 @@ class Settings(commands.Cog):
         roles = await guildChangeRolesTable.getAllByGuild(ui.owner.guild.id)
         if not roles:
             embed = disnake.Embed(
-                title='🎉 У вас нет привязки к ролям!',
-                description=f'{cfg.GEAR_EMOJI} Чтобы включить ограничение, добавьте хотя бы одну роль.',
+                description=f'🎉 У вас нет привязки к ролям!\n{emoji.GEAR} Чтобы включить ограничение, добавьте сюдаы хотя бы одну роль.',
                 color=cfg.MAIN_COLOR
             )
-            
             return await ui.edit(embed)
         
         guild_roles = []

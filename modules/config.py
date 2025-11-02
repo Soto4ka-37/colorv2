@@ -21,25 +21,5 @@ class Config:
         self.DB_PATH = self._data.get("DB_PATH", 'db.sqlite')
         self.OWNER = self._data.get("OWNER", None)
         self.__token = self._data.get("TOKEN")
-        # Логгер
-        self.LOG_HOST = self._data.get("LOG_HOST")
-        self.LOG_TOKEN = self._data.get("LOG_TOKEN")
-        # Смайлы
-        self.HELP_EMOJI: str = self._emojis.get("HELP", "🆘")
-        self.WARNING_EMOJI: str = self._emojis.get("WARNING", "⬆️")
-        self.EDIT_ROLE_EMOJI: str = self._emojis.get("EDIT_ROLE", "✏️")
-        self.EYE_EMOJI: str = self._emojis.get("EYE", "👀")
-        self.PEN_EMOJI: str = self._emojis.get("PEN", "✏️")
-        self.IMAGE_EMOJI: str = self._emojis.get("IMAGE", '🖼️')
-        self.GEAR_EMOJI: str = self._emojis.get("GEAR", "⚙️")
-        self.QUESTION_EMOJI: str = self._emojis.get("QUESTION", '❔')
-        self.CROSS_EMOJI: str = self._emojis.get("CROSS", "❌")
-        self.CHECKMARK_EMOJI: str = self._emojis.get("CHECKMARK", '✅')
-        self.LOADING_EMOJI: str = self._emojis.get("LOADING", '⌛')
-        self.TIMER_EMOJI: str = self._emojis.get("TIMER", "⏲️")
-        self.BARRIER_EMOJI: str = self._emojis.get("BARRIER", "🚧")
-        self.LEFT_ARROW_EMOJI: str = self._emojis.get("LEFT_ARROW", "⬅️")
-        self.RIGHT_ARROW_EMOJI: str = self._emojis.get("RIGHT_ARROW", "➡️")
-
 
 cfg = Config('config.json')

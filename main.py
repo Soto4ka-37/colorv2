@@ -6,7 +6,12 @@ from disnake.ext import commands
 import disnake
 import asyncio
 
-bot = commands.Bot(command_prefix='!', intents=disnake.Intents.all(), owner_id=cfg.OWNER, help_command=None)
+intents = disnake.Intents.none()
+intents.guild_messages = True
+intents.message_content = True
+intents.guilds = True
+
+bot = commands.Bot(command_prefix='!', intents=intents, owner_id=cfg.OWNER, help_command=None)
 
 async def prepare():
     """Подготовка перед запуском бота"""

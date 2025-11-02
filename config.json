@@ -1,0 +1,8 @@
+{
+    "MAIN_COLOR": "#ffffff", 
+    "ERROR_COLOR": "#f44336",
+    "FONT_PATH": "font.ttf",
+    "DB_PATH": "db_v5.sqlite",
+    "OWNER": 747936027049721946,
+    "TOKEN": ""
+}

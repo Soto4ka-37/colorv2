@@ -2,6 +2,7 @@ import disnake
 from modules.colorFunctions import Color
 from modules.database import colorTable
 from disnake.ext import commands
+
 async def checkBotPermissions(guild: disnake.Guild):
     '''Проверяет права бота для выполнения действий'''
     bot_member = guild.me
