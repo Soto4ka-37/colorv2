@@ -66,22 +66,23 @@ class SmapRejactirovanie(commands.Cog):
 
     @commands.is_owner()
     @commands.command('clg')
-    async def clg(self, ctx: commands.Context, guild_id: int, channel_id: int):
+    async def clg(self, ctx: commands.Context, channel_id: int = None):
+        if channel_id is not None:
+            channel = await self.bot.fetch_channel(channel_id)
+        else:
+            channel = ctx.channel
+            
         embed = disnake.Embed(
             description=(
                 f"**{emoji.INFO} Ченджлог v2.3**\n"
                 "- Иконки перенесены с `config.json` в `emojis.json`"
                 "- Обновлён набор иконок и основной цвет.\n"
                 "- Обновлена стилистика сообщений, убраны заголовки из эмбедов."
+                "- Добавлен генератор config.json (Подготовка к OpenSource)"
             ),
             color=cfg.MAIN_COLOR
         )
-        guild = self.bot.get_guild(guild_id)
-        if not guild:
-            return
-        channel = guild.get_channel(channel_id)
-        if not channel:
-            return
+        
         await channel.send(embed=embed)
         
 def setup(bot):
