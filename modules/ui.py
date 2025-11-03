@@ -204,7 +204,7 @@ class ConfirmView(disnake.ui.View):
         self._event.set()
         self.stop()
 
-    @disnake.ui.button(label="Да", style=disnake.ButtonStyle.green)
+    @disnake.ui.button(emoji=emoji.CHECKMARK, label="Продолжить", style=disnake.ButtonStyle.green)
     async def confirm(self, button: disnake.ui.Button, inter: disnake.Interaction):
         if inter.author.id != self.ui.owner.id:
             await sendNotYour(self.ui, inter)
@@ -214,7 +214,7 @@ class ConfirmView(disnake.ui.View):
         self.stop()
         await inter.response.defer()
         
-    @disnake.ui.button(label="Нет", style=disnake.ButtonStyle.red)
+    @disnake.ui.button(emoji=emoji.CROSS, label="Отмена", style=disnake.ButtonStyle.red)
     async def cancel(self, button: disnake.ui.Button, inter: disnake.Interaction):
         if inter.author.id != self.ui.owner.id:
             await sendNotYour(self.ui, inter)
@@ -294,7 +294,7 @@ class ColorChoiseView(disnake.ui.View):
         self.stop()
         await inter.response.defer()
 
-    @disnake.ui.button(label="Отмена", style=disnake.ButtonStyle.red)
+    @disnake.ui.button(emoji=emoji.CROSS, label="Отмена", style=disnake.ButtonStyle.red)
     async def cancel(self, button: disnake.ui.Button, inter: disnake.Interaction):
         if inter.author.id != self.ui.owner.id:
             await sendNotYour(self.ui, inter)

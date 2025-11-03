@@ -17,45 +17,54 @@ async def sendHelp(ui: UniversalUiMessage) -> None:
     embed = disnake.Embed(
         description=(            
             f"# {emoji.HELP} Справка по использованию бота\n"
-            'Поля помченные `[*]` являются обязательными. Использовать цель могут только участники с правом `manage_roles`.\n'
+            'Поля помеченные `[*]` являются обязательными. Использовать цель могут только участники с правом `manage_roles`.\n'
             
-            '### Смена цвета\n'
+            f'### {emoji.PAINT} Смена цвета\n'
             'Устанавливает указанный цвет, в формате `HEX`\n'
             'Команды: </color create:1327037046778364026> или `!цвет` или `!color` (`!colour`)\n'
             'Поля: `[*HEX]`, `[@цель]`\n'
             
-            '### Случайный цвет\n'
+            f'### {emoji.DICE} Случайный цвет\n'
             'Генерирует и устанавливает случайный цвет\n'
             'Команды: </color random:1327037046778364026> или `!цвет рандом` или `!color random`\n'
             'Поля: `[@цель]`\n'
 
-            '### Анализ аватара\n'
+            f'### {emoji.LOUPE} Анализ аватара\n'
             'Предлагает цвета на основе аватарки\n'
             'Команды: </color avatar:1327037046778364026> или `!цвет аватар`\n'
             'Поля: `[@источник]`\n'
 
-            '### Восстановление цвета\n'
-            'Восстанавливает цвет из базы данных\n'
+            f'### {emoji.SHIELD} Восстановление цвета\n'
+            'Пересоздаёт ваш текущий цвет\n'
             'Команды: </color repair:1327037046778364026> или `!цвет починить`\n'
             'Поля: `[@цель]`\n'
 
-            '### Сброс цвета\n'
+            f'### {emoji.HAMMER} Сброс цвета\n'
             'Удаляет текущий цвет\n'
             'Команды: </color reset:1327037046778364026> или `!цвет -` или `!цвет сброс` или `!color reset`\n'
             'Поля: `[@цель]`\n'
 
-            '### Взаимодействия\n'
+            f'### {emoji.CHAT} Взаимодействия\n'
             'ПКМ по пользователю -> Приложения:\n'
             '- Скопировать цвет роли\n'
             '- Скопировать цвет аватара\n'
 
-            '### О формате HEX\n'
+            f'### {emoji.INFO} О формате HEX\n'
             'Формат: `#RRGGBB` (Например: `#FFA500` или `ff0000`)\n'
             '[Выбрать цвет с помощью палитры](https://csscolor.ru/)\n'
             '[Таблица цветов](https://colorswall.com/ru/colors/xkcd)\n'
 
-            '### Ограничения\n'
-            f'- {emoji.CLOCK} Один участник может менять свой цвет раз в 10 секунд'
+            f'### {emoji.CLOCK} Ограничения\n'
+            '- Один участник может менять свой цвет не чаще, чем раз в 10 секунд\n'
+            
+            f'# {emoji.GEAR} Настройки\n'
+            f'Использовать эти команды могут участники с правом `manage_roles`.'
+            
+            f'### {emoji.KEY} Белый список\n'
+            'По умолчанию **отключён**, чтобы включить нужно добавить хотя бы одну роль. Люди без ролей в белом списке не смогут использовать бота\n'
+            '- </settings access list:1414915966839820370> - список ролей в белом списке\n'
+            '- </settings access add:1425581992619278349> `[*роль]` - добавить роль в белый список\n'
+            '- </settings access remove:1425581992619278349> `[*роль]` - убрать роль из белого списка'
         ),
         color=cfg.MAIN_COLOR
     )
@@ -64,7 +73,7 @@ async def sendHelp(ui: UniversalUiMessage) -> None:
 async def sendTimeout(ui: UniversalUiMessage) -> None:
     '''Сообщение о таймауте'''
     embed = disnake.Embed(
-        description=f'{emoji.CLOCK} Время ожидания истекло. Пожалуйста, попробуйте снова.',
+        description=f'{emoji.CLOCK} Взаимодействие оставалось без ответа слишком долго!',
         color=cfg.ERROR_COLOR
     )
     await ui.edit(embed)
@@ -72,7 +81,7 @@ async def sendTimeout(ui: UniversalUiMessage) -> None:
 async def sendNotColor(ui: UniversalUiMessage) -> None:
     '''Сообщение об отсутствии цвета у участника'''
     embed = disnake.Embed(
-        description=f'{emoji.CROSS} У вас нет цвета. Создать вы его можете командой </color create:1327037046778364026>',
+        description=f'{emoji.CROSS} У вас нет цвета! Создать его вы можете командой </color create:1327037046778364026>',
         color=cfg.ERROR_COLOR
     )
     await ui.edit(embed)
@@ -123,9 +132,15 @@ async def acceptColor(ui: UniversalUiMessage, member: disnake.Member, color: Col
     color_name, percent = await color.getName()
     embed = disnake.Embed(
         description=(
-            f'{emoji.INFO} Это дейсвтие сменит ваш цвет на **{color_name.upper()} ({percent})**! Продолжить?'
+            (
+                f'## {emoji.PAINT} {color_name.upper()} ({percent})\n'
+                f'Вы уверены что хотите установить этот цвет?'
+            )
             if ui.owner.id == member.id
-            else f'{emoji.INFO} Это дейсвтие сменит цвет участника `{member}` ({member.mention}) на **{color_name.upper()} ({percent})**! Продолжить?'
+            else (
+                f'## {emoji.PAINT} {color_name.upper()} ({percent})\n'
+                f'Вы уверены что хотите установить этот цвет участнику `{member.name}` ({member.mention})?'
+            )
         ),
         color=color.disnakeColor)
     
@@ -144,9 +159,15 @@ async def acceptReset(ui: UniversalUiMessage, member: disnake.Member) -> bool:
     # Спрашиваем подтверждение сброса цвета
     embed = disnake.Embed(
         description=(
-            f'{emoji.INFO} Это действие полностью удалит ваш цвет! Продолжить?'
+            (
+                f'## {emoji.HAMMER} Внимание!\n'
+                'Это действие удалит ваш цвет!'
+            )
             if ui.owner.id == member.id
-            else f'{emoji.INFO} Это действие полностью удалит цвет участника `{member}` ({member.mention})! Продолжить?'
+            else (
+                f'## {emoji.HAMMER} Внимание!\n'
+                f'Это действие удалит цвет участника `{member.name}` ({member.mention})!'
+            )
         ),
         color=cfg.ERROR_COLOR
     )
@@ -162,7 +183,10 @@ async def choiseAndAcceptColor(ui: UniversalUiMessage, member: disnake.Member, c
     '''Функция для выбора и подтверждения цвета из списка. Возвращает выбранный цвет, False если отменил и None при таймауте'''
     for _ in range(5): # Максимум 5 попыток выбора цвета
         embed = disnake.Embed(
-            description=f"{emoji.CHECKMARK} ",
+            description=(
+                f"## {emoji.LOUPE} Анализ завершён!\n"
+                "Выберите цвет чтобы продолжить."
+            ),
             color=cfg.MAIN_COLOR
         )
         image = await generateFiveColorsImage(colors)
@@ -227,9 +251,15 @@ async def changeColor(ui: UniversalUiMessage, member: disnake.Member, color: Col
     color_name, percent = await color.getName()
     embed = disnake.Embed(
         description=(
-            f'{emoji.CHECKMARK} Цвет **{color_name.upper()} ({percent})** успешно создан и выдан вам.'
+            (
+                f'# {emoji.PAINT} {color_name.upper()} ({percent})\n'
+                f'{emoji.CHECKMARK} Ваш цвет успешно создан и выдан.'
+            )
             if ui.owner.id == member.id
-            else f'{emoji.CHECKMARK} Цвет успешно создан и выдан участнику `{member}`.'
+            else (
+                f'# {emoji.PAINT} {color_name.upper()} ({percent})\n'
+                f'{emoji.CHECKMARK} Цвет успешно создан и выдан участнику `{member.name}` ({member.mention}).'
+            )
         ),
         color=color.disnakeColor
     )
@@ -262,7 +292,10 @@ async def processRepairCommand(ui: UniversalUiMessage, member: disnake.Member) -
 
 async def processAvatarCommand(ui: UniversalUiMessage, member: disnake.Member) -> Color | None:
     '''Процесс выполнения подкоманды анализа аватара. Возвращает выбранный цвет или None при ошибке'''
-    
+    await ui.edit(embed=disnake.Embed(
+        description=f'{emoji.LOADING} Смотрю аватарку...',
+        color=cfg.MAIN_COLOR
+    ))
     # Получаем 5 доминантных цветов
     colors = await getDominantColors(member, 5)
     if not colors:

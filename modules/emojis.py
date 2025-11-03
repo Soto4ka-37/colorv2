@@ -12,26 +12,24 @@ class Emojis:
         if not os.path.exists(self._path):
             default_data = {
                 "LOADING": "",
-                "DB": "",
-                "CHIP": "",
-                "STATS": "",
-                "CLOCK": "",
-                "STORAGE": "",
                 "LEFT_ARROW": "",
                 "RIGHT_ARROW": "",
                 "CROSS": "",
                 "CHECKMARK": "",
-                "LAYERS": "",
                 "INFO": "",
-                "WARNING": "",
                 "ERROR": "",
+                "WARNING": "",
                 "FORBIDDEN": "",
-                "SPEEDOMETER": "",
-                "ONLINE": "",
-                "OFFLINE": "",
                 "GEAR": "",
                 "KEY": "",
-                "HELP": ""
+                "HELP": "",
+                "CLOCK": "",
+                "LOUPE": "",
+                "DICE": "",
+                "PAINT": "",
+                "HAMMER": "",
+                "SHIELD": "",
+                "CHAT": ""
             }
             with open(self._path, 'w', encoding='utf-8') as f:
                 json.dump(default_data, f, ensure_ascii=False, indent=4)
@@ -47,9 +45,17 @@ class Emojis:
         self.CHECKMARK: str = self._data.get('CHECKMARK', '')
         self.INFO: str = self._data.get('INFO', '')
         self.ERROR: str = self._data.get('ERROR', '')
+        self.WARNING: str = self._data.get('WARNING', '')
         self.FORBIDDEN: str = self._data.get('FORBIDDEN', '')
         self.GEAR: str = self._data.get('GEAR', '')
         self.KEY: str = self._data.get('KEY', '')
         self.HELP: str = self._data.get('HELP', '')
+        self.CLOCK: str = self._data.get('CLOCK', '')
+        self.LOUPE: str = self._data.get('LOUPE', '')
+        self.DICE: str = self._data.get('DICE', '')
+        self.PAINT: str = self._data.get('PAINT', '')
+        self.HAMMER: str = self._data.get('HAMMER', '')
+        self.SHIELD: str = self._data.get('SHIELD', '')
+        self.CHAT: str = self._data.get('CHAT', '')
 
 emoji = Emojis('emojis.json')

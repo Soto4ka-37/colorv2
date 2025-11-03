@@ -100,7 +100,7 @@ class Settings(commands.Cog):
         roles = await guildChangeRolesTable.getAllByGuild(ui.owner.guild.id)
         if not roles:
             embed = disnake.Embed(
-                description=f'🎉 У вас нет привязки к ролям!\n{emoji.GEAR} Чтобы включить ограничение, добавьте сюдаы хотя бы одну роль.',
+                description=f'# {emoji.KEY} У вас нет привязки к ролям!\nЧтобы включить ограничение, добавьте сюда хотя бы одну роль.',
                 color=cfg.MAIN_COLOR
             )
             return await ui.edit(embed)
@@ -113,7 +113,7 @@ class Settings(commands.Cog):
             else:
                 await guildChangeRolesTable.removeRole(ui.owner.guild.id, role_id)
                 
-        view = AutoPaginatorView(ui, 'Роли в белом списке', ', '.join(guild_roles))
+        view = AutoPaginatorView(ui, f'{emoji.KEY} Роли в белом списке', ', '.join(guild_roles))
         await view.show_page()
 
 def setup(bot):

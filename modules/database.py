@@ -138,6 +138,13 @@ class ColorTableManager:
     # ------------------------
     # Чтение
     # ------------------------
+    async def getAllMembersWithColor(self, guild_id: int) -> tuple[int]:
+        rows = await self.db.fetchall_read(
+            "SELECT user_id FROM colors WHERE guild_id = ?;",
+            (guild_id,)
+        )
+        return tuple(row[0] for row in rows)
+    
     async def getAllByUser(self, guild_id: int, user_id: int) -> tuple[DataColor, ...]:
         rows = await self.db.fetchall_read(
             "SELECT role_id, color FROM colors WHERE guild_id = ? AND user_id = ?;",

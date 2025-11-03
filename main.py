@@ -10,6 +10,7 @@ intents = disnake.Intents.none()
 intents.guild_messages = True
 intents.message_content = True
 intents.guilds = True
+intents.members = True
 
 bot = commands.Bot(command_prefix='!', intents=intents, owner_id=cfg.OWNER, help_command=None)
 
