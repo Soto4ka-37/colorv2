@@ -33,6 +33,7 @@ class Emojis:
             }
             with open(self._path, 'w', encoding='utf-8') as f:
                 json.dump(default_data, f, ensure_ascii=False, indent=4)
+            print(f"[Config] Файл {self._path} не найден, создан новый шаблон.")
 
     def _load(self) -> None:
         with open(self._path, encoding='utf-8') as f:

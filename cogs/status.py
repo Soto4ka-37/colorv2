@@ -9,7 +9,7 @@ class Status(commands.Cog):
     async def on_ready(self):
         activity = disnake.Activity(
             type=disnake.ActivityType.custom,
-            state="Меняет !цвет | v2.3.1",
+            state="Меняет !цвет | v2.3.2",
             name='-', # Заглушка, так как имя берётся из state
         )
         await self.bot.change_presence(status=disnake.Status.idle, activity=activity)

@@ -9,7 +9,7 @@ class ClearOnLeaveCog(commands.Cog):
         
     # Удаляет цвет при выходе участника с сервера
     @commands.Cog.listener('on_member_remove')
-    async def removeColor(member: disnake.Member):
+    async def removeColor(self, member: disnake.Member):
         await removeUserRoles(member.guild, member.id)
 
     # Удаляет цвета участников, вышедших когда бот был в офлайне
