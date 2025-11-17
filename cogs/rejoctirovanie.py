@@ -5,10 +5,72 @@
 # МОГУТ ПРИСУТСТВОВАТЬ ОСКОРБИТЕЛЬНЫЕ ИЛИ НЕЦЕНЗУРНЫЕ ВЫРАЖЕНИЯ
 import disnake
 import random
+import aiohttp
+import bs4
+import datetime
+import asyncio
 from disnake.ext import commands
 from modules.config import cfg
 from modules.emojis import emoji
 
+class AnekdotEvent():
+    def __init__(self, bot: commands.Bot):
+        self.bot = bot
+        self.runned = False
+        self.channel = None
+            
+    async def getAnekdot(self):
+        url = 'https://anekdot.ru/random/anekdot'
+        headers = {"User-Agent": "Firefox"}
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, headers=headers) as response:
+                web = await response.text()
+
+        bs = bs4.BeautifulSoup(web, "lxml")
+        result = str(bs.find_all(class_="topicbox")[1].find(class_="text"))
+        text = result.replace("br/", "\n")
+        text = text.split(">")
+        text[0] = ""
+        text = ''.join(text)
+        text = text.split("<")
+        text[-1] = ""
+        text = ''.join(text)
+        return text
+    
+    # Каждый день
+    async def init(self):
+        if self.runned:
+            return
+        await self.bot.wait_until_ready()
+        try:
+            self.channel = await self.bot.fetch_channel(1437149222851055656)
+        except Exception as e:
+            return
+        self.runned = True
+        
+        if self.channel:
+            await self.channel.send(embed=disnake.Embed(description=f'{emoji.WARNING} Бот был перезапущен. Пересоздаю событие в этом чате...', color=cfg.MAIN_COLOR))
+            while True:
+                now = datetime.datetime.now(datetime.timezone.utc)
+                try:
+                    anekdot = await self.getAnekdot()
+                        
+                    # Время до след дня
+                    tomorrow = (now + datetime.timedelta(days=1)).replace(hour=9, minute=0, second=0, microsecond=0)
+                    next = (tomorrow - now).total_seconds()
+                    
+                    message = await self.channel.send(embed=disnake.Embed(description=f'# Смешнявка 🤣🤣😂🤣💀🤣\n```\n{anekdot}```\n**Следующий: <t:{int(tomorrow.timestamp())}:R>**',color=cfg.MAIN_COLOR))
+                    try:
+                        await message.add_reaction('✅')
+                        await message.add_reaction('🤣')
+                        await message.add_reaction('💀')
+                    except Exception as e:
+                        pass
+                    await asyncio.sleep(next)
+                except Exception as e:
+                    await asyncio.sleep(10)
+                    continue
+            
 class BaseAction():
     async def activate(self, message: disnake.Message):
         '''Выполняемое действие'''
@@ -138,11 +200,13 @@ class RejactirovanieCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.em = EventManager()
+        self.ae = AnekdotEvent(bot)
         self.bot.loop.create_task(self.initEvents())
-        
+        self.bot.loop.create_task(self.ae.init())
+
     async def initEvents(self):
         await self.bot.wait_until_ready()
-        if not self.bot.get_guild(1168297956663906376) and not self.bot.get_guild(1193355299512406021):
+        if not self.bot.get_guild(1168297956663906376):
             return
         
         em = self.em

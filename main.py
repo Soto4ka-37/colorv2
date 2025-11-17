@@ -29,13 +29,10 @@ async def shutdown():
     # Закрываем соединение с БД
     await db.close()
 
-async def main():
-    await prepare()
-
 if __name__ == "__main__":
     try:
         # Сначала подготовка
-        asyncio.run(main())
+        asyncio.run(prepare())
         # Подключение к дискорду
         bot.run(cfg.get_token())
         
