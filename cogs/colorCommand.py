@@ -126,7 +126,7 @@ async def sendNotInWhitelist(ui: UniversalUiMessage) -> None:
     )
     await ui.edit(embed)
 
-async def acceptColor(ui: UniversalUiMessage, member: disnake.Member, color: Color) -> bool:
+async def acceptColor(ui: UniversalUiMessage, member: disnake.Member, color: Color) -> bool | None:
     '''Функция для подтверждения выбранного цвета. Возвращает True если пользователь подтвердил выбор, False если отменил и None при таймауте'''
     # Спрашиваем подтверждение выбранного цвета
     color_name, percent = await color.getName()
@@ -448,7 +448,7 @@ class ColorCommand(commands.Cog):
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.guild_only()
     @commands.command(name='colour')
-    async def color_en1_ctx(self, ctx: commands.Context, hex_color: str = None, member: disnake.Member = None):
+    async def color_en2_ctx(self, ctx: commands.Context, hex_color: str = None, member: disnake.Member = None):
         await self.processColorUniversal(ctx, hex_color, member)
         
     # Интеракционные события команды цвет, разделены на субкоманды
