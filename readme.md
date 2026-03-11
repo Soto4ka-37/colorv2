@@ -1,5 +1,4 @@
-<img width="300" height="240" alt="ColorBotLogoMSPaint" src="https://github.com/user-attachments/assets/b6fe0cd4-2f13-4800-bc68-5e8d7c3aef4d" />
-<img width="680" height="240" alt="image" src="https://github.com/user-attachments/assets/f7e3e473-b99c-4bf8-8abb-26fa44732e62" />
+<img width="128" height="128" alt="ColorBot" src="https://github.com/user-attachments/assets/722a82ec-b482-496a-b780-f089553734be" />
 
 Бот предназначен для смены цвета никнейма участника
 
@@ -31,4 +30,5 @@
 }
 ```
 6. Запускаем бота `python3 main.py`
+
 
